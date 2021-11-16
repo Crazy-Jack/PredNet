@@ -21,9 +21,6 @@ In leido's code, ConvLSTMCell is borrowed from [here](https://gist.github.com/Ka
 
 However, we significantly revamped this module with a proper implementation of peephole connections, gating options, and a more readable style.
 
-### Current issues
-
-Currently, this repository contains two version of PredNet: [prednet](prednet.py) and [prednet_relu_bug](prednet_relu_bug.py).  The only difference between these two versions is that prednet_relu_bug omits the ReLU activation function for the target (A) units.  When the default hyperparameters are used (as described in the [paper](https://arxiv.org/abs/1605.08104)), prednet_relu_bug significantly outperforms prednet with a lower MSE, crisper images, and  avoiding over-fitting.  However, decreasing the number of model parameters (ommiting the top-most layer) and increasing the size of the training set seems to alleviate the issue.
 
 ### Training, Validation, and Testing
 
