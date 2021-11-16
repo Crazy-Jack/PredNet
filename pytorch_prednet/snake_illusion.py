@@ -44,8 +44,9 @@ model_file = os.path.join(MODEL_DIR, model_name + '.pt')
 
 
 
-customize_tag = ''
+
 reading_files = sys.argv[1]
+customize_tag = reading_files[:-4]
 with Image.open(f"img/{reading_files}") as img:
 	img = img.convert('RGB')  
 	
