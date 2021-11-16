@@ -1,6 +1,9 @@
 __pycache__/
 raw/
-kitti_raw_data/
+kitti_raw_data_test.zip
+sources_val.hkl
+X_test.hkl
+X_train.hkl
 orlando_data/
 prediction_plots/
 snake_plots/

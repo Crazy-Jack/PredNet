@@ -17,18 +17,19 @@ from prednet import PredNet
 
 # Visualization parameters
 n_plot = 4 # number of plot to make (must be <= batch_size)
+DATA_DIR = 'kitti_raw_data'
+
 
 # Model parameters
 gating_mode = 'mul'
 peephole = False
 lstm_tied_bias = False
-nt = 20
-extrap_start_time = 10  # 
+nt = 20  # TODO: change the number of time
+extrap_start_time = 10  # TODO: change to None if don't want to do extrapolation
 batch_size = 4
 
 default_channels = (3, 48, 96, 192)
 channel_six_layers = (3, 48, 96, 192, 384, 768)
-# A_channels = (3, 12, 48)
 A_channels = (3, 48, 96, 192)
 R_channels = (3, 48, 96, 192)
 using_default_channels = A_channels == default_channels
@@ -37,12 +38,11 @@ num_layers = len(A_channels)
 test_file = os.path.join(DATA_DIR, 'X_test.hkl')
 test_sources = os.path.join(DATA_DIR, 'sources_test.hkl')
 
-# MODEL_DIR = '/lab_data/leelab/tianqinl/PredNet/pytorch_prednet/' # NOTE:uncomment me
-MODEL_DIR = '/lab_data/leelab/tianqinl/PredNet/pytorch_prednet'
-model_name = 'prednet-L_0-mul-peepFalse-tbiasFalse-best'
+MODEL_DIR = 'models/'
+model_name = 'prednet-L_0-mul-peepFalse-tbiasFalse-best'  # TODO: Change the model to other models
 model_file = os.path.join(MODEL_DIR, model_name + '.pt')
 
-RESULTS_SAVE_DIR = '/lab_data/leelab/tianqinl/PredNet/pytorch_prednet'
+RESULTS_SAVE_DIR = './'
 
 kitti_test = KITTI(test_file, test_sources, nt, output_mode='prediction', sequence_start_mode='all')
 num_steps = len(kitti_test)//batch_size
@@ -122,7 +122,7 @@ for step, (inputs, targets) in enumerate(test_loader):
 			img_filename = plot_save_dir + img_filename
 			plt.savefig(img_filename + '.png')
 			plt.clf()
-			print('Image Saved')
+			print(f'Image Saved as {img_filename}.png')
 
 # Calculate dataset MSE
 pred_MSE /= num_steps
