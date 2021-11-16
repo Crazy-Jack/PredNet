@@ -16,6 +16,8 @@ from kitti_settings import *
 from prednet import PredNet
 from PIL import Image
 import cv2
+import sys 
+
 # Visualization parameters
 n_plot = 4 # number of plot to make (must be <= batch_size)
 
@@ -43,7 +45,8 @@ model_file = os.path.join(MODEL_DIR, model_name + '.pt')
 
 
 customize_tag = ''
-with Image.open("img/snake_resize.png") as img:
+reading_files = sys.argv[1]
+with Image.open(f"img/{reading_files}") as img:
 	img = img.convert('RGB')  
 	
 	img = np.asarray(img)
@@ -147,7 +150,7 @@ if make_plot:
 		
 		img_filename = f"snake_results-{model_name}-extrap_start_time{extrap_start_time}-nt-{nt}-{customize_tag}"
 		print('Saving ' + img_filename)
-		img_filename = plot_save_dir + img_filename
+		img_filename = img_filename
 		plt.savefig(img_filename + '.png')
 		plt.clf()
 		print('Image Saved')
