@@ -35,12 +35,12 @@ using_default_channels = A_channels == default_channels
 num_layers = len(A_channels)
 
 
-MODEL_DIR = '.models/' 
+MODEL_DIR = 'models/' 
 model_name = 'prednet-L_0-mul-peepFalse-tbiasFalse-best'
 # model_name = 'prednet-L_all-mul-peepFalse-tbiasFalse-best'
 model_file = os.path.join(MODEL_DIR, model_name + '.pt')
 
-RESULTS_SAVE_DIR = './'
+
 
 customize_tag = ''
 with Image.open("img/snake_resize.png") as img:
@@ -126,7 +126,8 @@ if make_plot:
 	fig = plt.figure(figsize = (nt, 2*aspect_ratio))
 	gs = gridspec.GridSpec(2, nt)
 	gs.update(wspace=0., hspace=0.)
-	plot_save_dir = os.path.join(RESULTS_SAVE_DIR, 'snake_plots/') # NOTE: change path
+	os.makedirs("snake_plots", exist_ok=True)
+	plot_save_dir = os.path.join('snake_plots/') # NOTE: change path
 	if not os.path.exists(plot_save_dir): os.mkdir(plot_save_dir)
 	plot_idx = np.random.permutation(targets.shape[0])[:n_plot]
 	
@@ -155,12 +156,12 @@ if make_plot:
 	for t in range(3):
 		fig = plt.figure(figsize = (5, 5))
 		plt.imshow(pred[0,t])
-		plt.savefig(os.path.join(RESULTS_SAVE_DIR, 'snake_plots/', img_filename+f'-{t}-{customize_tag}.png'))
+		plt.savefig(os.path.join('snake_plots/', img_filename+f'-{t}-{customize_tag}.png'))
 		plt.clf()
 	
 	
 	fig = plt.figure(figsize = (5, 5))
 	plt.imshow(targets[0,0])
-	plt.savefig(os.path.join(RESULTS_SAVE_DIR, 'snake_plots/', img_filename+f'-target-{customize_tag}.png'))
+	plt.savefig(os.path.join('snake_plots/', img_filename+f'-target-{customize_tag}.png'))
 	plt.clf()
 
