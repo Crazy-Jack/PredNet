@@ -98,7 +98,7 @@ class PredNet(nn.Module):
 			# In channels = 2 * A_channels[l] because of pos/neg error concat
 			# NOTE: Operation belongs to curr layer l and produces next layer  state l+1
 
-			update_A = nn.Sequential(nn.Conv2d(2* self.a_channels[l], self.a_channels[l+1], (3, 3), padding=1), nn.ReLU(), self.maxpool)
+			update_A = nn.Sequential(nn.Conv2d(2* self.a_channels[l], self.a_channels[l+1], (3, 3), padding=1), self.maxpool)
 			setattr(self, 'update_A{}'.format(l), update_A)
 	
 	def set_output_mode(self, output_mode):

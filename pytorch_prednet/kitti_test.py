@@ -13,8 +13,7 @@ import numpy as np
 
 from kitti_data import KITTI
 from kitti_settings import *
-# from prednet_relu_bug import PredNet
-from prednet import PredNet # NOTE: uncomment me
+from prednet import PredNet 
 
 # Visualization parameters
 n_plot = 4 # number of plot to make (must be <= batch_size)
@@ -23,23 +22,27 @@ n_plot = 4 # number of plot to make (must be <= batch_size)
 gating_mode = 'mul'
 peephole = False
 lstm_tied_bias = False
-nt = 10
-extrap_start_time = None
+nt = 20
+extrap_start_time = 10  # 
 batch_size = 4
 
 default_channels = (3, 48, 96, 192)
-A_channels = (3, 12, 24, 48)
-R_channels = (3, 12, 24, 48)
+channel_six_layers = (3, 48, 96, 192, 384, 768)
+# A_channels = (3, 12, 48)
+A_channels = (3, 48, 96, 192)
+R_channels = (3, 48, 96, 192)
+using_default_channels = A_channels == default_channels
+num_layers = len(A_channels)
 
 test_file = os.path.join(DATA_DIR, 'X_test.hkl')
 test_sources = os.path.join(DATA_DIR, 'sources_test.hkl')
 
-MODEL_DIR = '/user_data/aumoren/uPNC2021-aniekan/pytorch_prednet/models/' # NOTE:uncomment me
-# MODEL_DIR = '/user_data/aumoren/uPNC2021-aniekan/pytorch_prednet/archive/models_preReLU/'
-model_name = 'prednet-L_0-mul-peepFalse-tbiasFalse-chans_3_12_24_48-best'
+# MODEL_DIR = '/lab_data/leelab/tianqinl/PredNet/pytorch_prednet/' # NOTE:uncomment me
+MODEL_DIR = '/lab_data/leelab/tianqinl/PredNet/pytorch_prednet'
+model_name = 'prednet-L_0-mul-peepFalse-tbiasFalse-best'
 model_file = os.path.join(MODEL_DIR, model_name + '.pt')
 
-RESULTS_SAVE_DIR = '/user_data/aumoren/uPNC2021-aniekan/pytorch_prednet/'
+RESULTS_SAVE_DIR = '/lab_data/leelab/tianqinl/PredNet/pytorch_prednet'
 
 kitti_test = KITTI(test_file, test_sources, nt, output_mode='prediction', sequence_start_mode='all')
 num_steps = len(kitti_test)//batch_size
@@ -60,7 +63,9 @@ pred_MSE = 0.0
 copy_last_MSE = 0.0
 for step, (inputs, targets) in enumerate(test_loader):
 	# ---------------------------- Test Loop -----------------------------
+	# print(f"inputs {inputs.shape}")
 	inputs = inputs.cuda() # batch x time_steps x channel x width x height
+	
 	targets = targets
 
 	pred = model(inputs) # (batch_size, channels, width, height, nt)

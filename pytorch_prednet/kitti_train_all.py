@@ -34,7 +34,7 @@ n_train_seq = 500
 n_val_seq = 100
 
 # Model parameters
-loss_mode = 'L_0'
+loss_mode = 'L_all'
 peephole = False
 lstm_tied_bias = False
 gating_mode = 'mul'
