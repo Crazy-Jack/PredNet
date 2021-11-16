@@ -2,3 +2,9 @@ __pycache__/
 *.pt
 raw/
 kitti_raw_data/
+orlando_data/
+prediction_plots/
+snake_plots/
+snake_video/
+data/
+*.mp4

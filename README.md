@@ -1,22 +1,59 @@
-# uPNC2021-aniekan
+**Pytorch** implementation of PredNet.
+### Original Repository
 
-Summer project to understand internal representations of PredNet.
+This repo was first created by [leido](https://github.com/leido/pytorch-prednet) and was a helpful starting point.  My implementation fixes the known issues of the leido's code such as blurry, black-and-white predictions.
 
-### Research Description:
+Here's an example plot generating using [prednet_relu_bug](prednet_relu_bug.py) with default hyperparameters:
 
-PredNet is a Machine Learning (ML) model for next-frame prediction inspired by Predictive Coding.  It has been demonstrated that PredNet can replicate phenomena from the primate visual cortex, and it shows promise as a neuroscientific tool to understand the brain.  The goal of my summer research project was to investigate the inner workings of PredNet, specifically to understand the features to which it is tuned.  To this end, I employed feature visualization: an ML technique typically used to probe the preferred/anti-preferred stimulus features for units in Convolutional Neural Networks (CNNs).  This method optimizes the image to maximize/minimize the activation of the desired unit (ranging from single neurons to whole layers).  However, unlike CNNs, the internal states of PredNet are dynamic.  Thus, we require a generalized notion of extremal activity.  My project focused on the following extremes: Strong Sustained Response (SSR), Weak Sustained Response (WSR), and Strong Impulse Response (SIR).  Features that elicit an SSR/WSR are optimized to cause the neuron to have maximal/minimal activity throughout the entire sequence.  Features that elicit a SIR are optimized to cause the neuron to have maximal activity at a single time frame (the last frame in this study).  These responses were explored for neurons in the top-most layer within the recurrent representation module (R) and the feed-forward target modules (A).  The feature visualization demonstrated functional differences between R and A units.  Firstly the SSR feature for A units displayed jittering motion while the WSR feature lacked motion.  This result suggests that A units are sensitive to motion.  Secondly, the SIR features for the R units span the entire sequence, while SIR features for the A units only appear during the last few frames of the sequences.  This finding supports the notion that the R units do encode long-term dependencies, which is essential for building an internal model of the world.
+![](example_plot.png)
 
-The full results are displayed on my [uPNC Poster](https://docs.google.com/presentation/d/1swV622Tti9ab4fdUZ7L87N5N37Wzt01zPbiCxjuins8/edit?usp=sharing).
+This implementation includes features not present in the [original code](https://github.com/coxlab/prednet) such as the ability to toggle on peephole connections, between tied and untied bias weights, and between multiplicative and subtractive gating as developed by [Costa et al](https://papers.nips.cc/paper/2017/file/45fbc6d3e05ebd93369ce542e8f2322d-Paper.pdf).
 
-### Directories
+### Details
+"Deep Predictive Coding Networks for Video Prediction and Unsupervised Learning"(https://arxiv.org/abs/1605.08104)
 
-ConvLSTM_MNST: Getting familiar with ConvLSTM.  Attempted to train on MNIST but realized the paper
-	       did not use a simple ConvLSTM but an autoencoder-ConvLSTM.
-	       
-img_optim: Attempt at visualizing the feature of prednet units
+The PredNet is a deep recurrent convolutional neural network that is inspired by the neuroscience concept of predictive coding (Rao and Ballard, 1999; Friston, 2005)
 
-kitti_tuning: Determining a unit's preffered/anti-preffered samples from the KITTI dataset
+Original paper's [code](https://github.com/coxlab/prednet) is writen in Keras. Examples and project website can be found [here](https://coxlab.github.io/prednet/).
 
-optical_flow_tuning: testing prednet on synethic, optical-flow stimuli to explore possible direction tunning. (INCOMPLETE)
 
-prednet_pytorch: Re-implementation of [prednet](https://arxiv.org/abs/1906.11902v2)
+In leido's code, ConvLSTMCell is borrowed from [here](https://gist.github.com/Kaixhin/57901e91e5c5a8bac3eb0cbbdd3aba81).
+
+However, I significantly revamped this module with a proper implementation of peephole connections, gating options, and a more readable style.
+
+### Current issues
+
+Currently, this repository contains two version of PredNet: [prednet](prednet.py) and [prednet_relu_bug](prednet_relu_bug.py).  The only difference between these two versions is that prednet_relu_bug omits the ReLU activation function for the target (A) units.  When the default hyperparameters are used (as described in the [paper](https://arxiv.org/abs/1605.08104)), prednet_relu_bug significantly outperforms prednet with a lower MSE, crisper images, and  avoiding over-fitting.  However, decreasing the number of model parameters (ommiting the top-most layer) and increasing the size of the training set seems to alleviate the issue.
+
+### Training, Validation, and Testing
+
+Training a prednet model is done via [kitti_train.py](kitti_train.py).  Feel free to adjust the following training and model hyperparamters within the script:  
+
+#### Training parameters
+- **num\_epochs**: default- 150
+- **batch\_size**: default- 4
+- **lr**: learning rate, default- 0.001
+- **nt**: length of video sequences, default- 10
+- **n\_train\_seq**: number of video sequences per training epoch, default- 500
+- **n\_val\_seq**: number of video sequenced used for validation, default- 100
+
+#### Model hyperparameters
+- **loss\_mode**: 'L\_0' or 'L\_all', default- 'L_0'
+- **peephole**: toggles incluse of peephole connection w/n the ConvLSTM, default- False
+- **lstm\_tied\_bias**: toggles the tieing of biases w/n ConvLST, default- False
+- **gating\_mode**: toggles between multiplicative 'mul' or subtractive 'sub' gating w/n ConvLSTM, default- 'mul'
+- **A\_channels & R\_channels**: number of channels within each layer of PredNet, default- (3, 48, 96, 192)
+
+
+After training is complete, the script saves two versions of the model: prendet-\*-best.pt (version with the lowest loss on validation set) and prednet-\*.pt (version saved after the last epoch).
+
+To test your models using [kitti_test.py](kitti_test.py) transfer them into your 'models' folder, set the testing and model hyperparamters accordingly, then run the script.  It should output the MSE between the GT and predicted sequences as well as the MSE if the model simply predicted the previous frame at each time step.
+
+#### A brief word on hyperparameters
+
+The default parameters listed above reproduce the results in the [paper](https://arxiv.org/abs/1605.08104) when using [prednet_relu_bug](prednet_relu_bug.py).  However, [prednet](prednet.py) underperforms under these parameters and overfits the data.  After a [coarse hyperparameter search](https://docs.google.com/spreadsheets/d/1-5LYZKMhMonAJnmb9t5XTLztYCSnrqe2ro0XkNei6mE/edit?usp=sharing), I found that shrinking the model helped to alleviate overfitting.  
+
+#### Data
+
+Acquiring the dataset requires multiple steps: 1) downloading the zip files 2) extracting and processsing the images.  Step 1 is done via running the download\_raw\_data\_<category>.sh scripts found in kitti_raw_data\raw\<category>.  Step 2 is handled by running the [process_kitti.py](process_kitty.py).
+
