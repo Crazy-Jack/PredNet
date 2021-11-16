@@ -40,7 +40,7 @@ model_name = 'prednet-L_0-mul-peepFalse-tbiasFalse-best'
 # model_name = 'prednet-L_all-mul-peepFalse-tbiasFalse-best'
 model_file = os.path.join(MODEL_DIR, model_name + '.pt')
 
-RESULTS_SAVE_DIR = '/lab_data/leelab/tianqinl/PredNet/pytorch_prednet/'
+RESULTS_SAVE_DIR = './'
 
 customize_tag = ''
 with Image.open("img/snake_resize.png") as img:
@@ -163,10 +163,4 @@ if make_plot:
 	plt.imshow(targets[0,0])
 	plt.savefig(os.path.join(RESULTS_SAVE_DIR, 'snake_plots/', img_filename+f'-target-{customize_tag}.png'))
 	plt.clf()
-	# # Calculate dataset MSE
-	# pred_MSE /= num_steps
-	# copy_last_MSE /= num_steps
-
-	# print('Prediction MSE: {:.6f}'.format(pred_MSE)) # no need to worry about "first time step"
-	# print('Copy-Last MSE: {:.6f}'.format(copy_last_MSE))
 
