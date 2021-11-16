@@ -19,7 +19,7 @@ Original paper's [code](https://github.com/coxlab/prednet) is writen in Keras. E
 
 In leido's code, ConvLSTMCell is borrowed from [here](https://gist.github.com/Kaixhin/57901e91e5c5a8bac3eb0cbbdd3aba81).
 
-However, I significantly revamped this module with a proper implementation of peephole connections, gating options, and a more readable style.
+However, we significantly revamped this module with a proper implementation of peephole connections, gating options, and a more readable style.
 
 ### Current issues
 
@@ -51,7 +51,7 @@ To test your models using [kitti_test.py](kitti_test.py) transfer them into your
 
 #### A brief word on hyperparameters
 
-The default parameters listed above reproduce the results in the [paper](https://arxiv.org/abs/1605.08104) when using [prednet_relu_bug](prednet_relu_bug.py).  However, [prednet](prednet.py) underperforms under these parameters and overfits the data.  After a [coarse hyperparameter search](https://docs.google.com/spreadsheets/d/1-5LYZKMhMonAJnmb9t5XTLztYCSnrqe2ro0XkNei6mE/edit?usp=sharing), I found that shrinking the model helped to alleviate overfitting.  
+The default parameters listed above reproduce the results in the [paper](https://arxiv.org/abs/1605.08104) when using [prednet_relu_bug](prednet_relu_bug.py).  However, [prednet](prednet.py) underperforms under these parameters and overfits the data.  After a [coarse hyperparameter search](https://docs.google.com/spreadsheets/d/1-5LYZKMhMonAJnmb9t5XTLztYCSnrqe2ro0XkNei6mE/edit?usp=sharing), we found that shrinking the model helped to alleviate overfitting.  
 
 #### Data
 
