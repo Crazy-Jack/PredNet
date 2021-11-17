@@ -1,6 +1,8 @@
 __pycache__/
 raw/
 kitti_raw_data_test.zip
+main_movies.zip
+main_movies/
 sources_val.hkl
 X_test.hkl
 X_train.hkl

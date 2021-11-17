@@ -24,8 +24,8 @@ DATA_DIR = 'kitti_raw_data'
 gating_mode = 'mul'
 peephole = False
 lstm_tied_bias = False
-nt = 20  # TODO: change the number of time
-extrap_start_time = 10  # TODO: change to None if don't want to do extrapolation
+nt = 10  # TODO: change the number of time
+extrap_start_time = None  # TODO: change to None if don't want to do extrapolation
 batch_size = 4
 
 default_channels = (3, 48, 96, 192)
@@ -80,7 +80,7 @@ for step, (inputs, targets) in enumerate(test_loader):
 	pred_MSE += torch.mean((targets[:, 1:] - pred[:, 1:])**2).item() # look at all timesteps after the first
 	copy_last_MSE += torch.mean((targets[:, 1:] - targets[:, :-1])**2).item()
 	
-	if step == 20:
+	if step == 20: # change this number to control the starting sequence of your video clip
 		# Plot some predictions
 		targets = targets.detach().numpy() * 255.
 		pred = pred.detach().numpy() * 255.
@@ -123,6 +123,8 @@ for step, (inputs, targets) in enumerate(test_loader):
 			plt.savefig(img_filename + '.png')
 			plt.clf()
 			print(f'Image Saved as {img_filename}.png')
+		
+		break
 
 # Calculate dataset MSE
 pred_MSE /= num_steps
