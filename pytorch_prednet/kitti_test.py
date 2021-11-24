@@ -39,7 +39,7 @@ test_file = os.path.join(DATA_DIR, 'X_test.hkl')
 test_sources = os.path.join(DATA_DIR, 'sources_test.hkl')
 
 MODEL_DIR = 'models/'
-model_name = 'prednet-L_0-mul-peepFalse-tbiasFalse-best'  # TODO: Change the model to other models
+model_name = 'model1'  # TODO: Change the model to other models
 model_file = os.path.join(MODEL_DIR, model_name + '.pt')
 
 RESULTS_SAVE_DIR = './'
