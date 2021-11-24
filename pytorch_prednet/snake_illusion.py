@@ -38,8 +38,7 @@ num_layers = len(A_channels)
 
 
 MODEL_DIR = 'models/' 
-model_name = 'prednet-L_0-mul-peepFalse-tbiasFalse-best'
-# model_name = 'prednet-L_all-mul-peepFalse-tbiasFalse-best'
+model_name = 'model1'
 model_file = os.path.join(MODEL_DIR, model_name + '.pt')
 
 
